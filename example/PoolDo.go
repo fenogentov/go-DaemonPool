@@ -2,7 +2,6 @@ package godaemonpool
 
 import (
 	"context"
-	"fmt"
 	"os/signal"
 	"time"
 
@@ -14,12 +13,12 @@ import (
 )
 
 var jobA = func(ctx context.Context) {
-	fmt.Println("jobA")
+	slog.Info("jobA")
 	time.Sleep(10 * time.Second)
 }
 
 func jobB(ctx context.Context) {
-	fmt.Println("jobB")
+	slog.Info("jobB")
 	time.Sleep(12 * time.Second)
 }
 
@@ -28,13 +27,13 @@ type job struct {
 }
 
 func (j *job) execute(ctx context.Context) {
-	fmt.Println("job.execute")
+	slog.Info("job.execute")
 	time.Sleep(14 * time.Second)
 }
 
 func jobMain(ctx context.Context) {
 	<-ctx.Done()
-	fmt.Println("shutdown jobMain")
+	slog.Info("shutdown jobMain")
 }
 
 func RunDaemons(ctx context.Context) {
@@ -64,20 +63,22 @@ func Example() {
 	RunDaemons(ctx)
 
 	// Ounput:
-	// 	job.execute
-	// jobB
-	// jobA
-	// job.execute
-	// jobA
-	// jobB
-	// jobA
-	// jobA
+	// 2023/07/14 12:13:23 INFO job.execute
+	// 2023/07/14 12:13:23 INFO jobB
+	// 2023/07/14 12:13:23 INFO job.execute
+	// 2023/07/14 12:13:23 INFO jobB
+	// 2023/07/14 12:13:23 INFO jobA
+	// 2023/07/14 12:13:23 INFO jobA
+	// 2023/07/14 12:13:33 INFO jobA
+	// 2023/07/14 12:13:33 INFO jobA
+	// 2023/07/14 12:13:35 INFO jobB
+	// 2023/07/14 12:13:35 INFO jobB
 	// ^C
-	// shutdown jobMain
-	// 2023/07/14 12:09:30 INFO shutdown jobC
-	// 2023/07/14 12:09:30 INFO shutdown jobB
-	// 2023/07/14 12:09:30 INFO shutdown jobA
-	// 2023/07/14 12:09:30 ERROR jobC: context canceled
-	// 2023/07/14 12:09:30 ERROR context canceled
-	// 2023/07/14 12:09:30 INFO shutdown all daemons
+	// 2023/07/14 12:13:36 INFO shutdown jobMain
+	// 2023/07/14 12:13:36 INFO shutdown jobC
+	// 2023/07/14 12:13:36 INFO shutdown jobB
+	// 2023/07/14 12:13:36 INFO shutdown jobA
+	// 2023/07/14 12:13:36 ERROR jobC: context canceled
+	// 2023/07/14 12:13:36 ERROR context canceled
+	// 2023/07/14 12:13:36 INFO shutdown all daemons
 }
