@@ -23,7 +23,6 @@ func PoolWithErrorDo(ctx context.Context, name string, maxWorkers int, job func(
 			return err
 
 		case <-ctx.Done():
-			slog.Info(fmt.Sprintf("shutdown %s", name))
 			return fmt.Errorf("%s: %w", name, ctx.Err())
 
 		case chWorkers <- struct{}{}:

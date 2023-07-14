@@ -21,6 +21,9 @@ func PoolDo(ctx context.Context, name string, maxWorkers int, job func(ctx conte
 
 	for {
 		select {
+		case <-ctx.Done():
+			return fmt.Errorf("%s: %w", name, ctx.Err())
+
 		case ch <- struct{}{}:
 			go func(ctx context.Context, ch chan struct{}) {
 				defer func() {
@@ -32,10 +35,6 @@ func PoolDo(ctx context.Context, name string, maxWorkers int, job func(ctx conte
 				}()
 				job(ctx)
 			}(ctx, ch)
-
-		case <-ctx.Done():
-			slog.Info(fmt.Sprintf("shutdown %s", name))
-			return fmt.Errorf("%s: %w", name, ctx.Err())
 
 		default:
 			continue
