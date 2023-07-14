@@ -1,4 +1,4 @@
-module github.com/go-DaemonPool
+module godaemonpool
 
 go 1.20
 
