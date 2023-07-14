@@ -11,7 +11,8 @@ import (
 
 var ErrNumberWorkers = errors.New("invalid number of workers")
 
-// PoolDo
+// PoolDo запускает в горутинах требуемое количество воркеров
+// с функционалом Graceful Shutdown.
 func PoolDo(ctx context.Context, name string, maxWorkers int, job func(ctx context.Context)) error {
 	if maxWorkers < 1 {
 		return ErrNumberWorkers

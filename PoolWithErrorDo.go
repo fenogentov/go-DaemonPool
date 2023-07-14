@@ -8,7 +8,8 @@ import (
 	"golang.org/x/exp/slog"
 )
 
-// PoolDo
+// PoolWithErrorDo запускает в горутинах требуемое количество воркеров
+// с функционалом Graceful Shutdown и контролем ошибок в воркерах.
 func PoolWithErrorDo(ctx context.Context, name string, maxWorkers int, job func(ctx context.Context) error) error {
 	if maxWorkers < 1 {
 		return ErrNumberWorkers
