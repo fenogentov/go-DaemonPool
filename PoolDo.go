@@ -34,9 +34,8 @@ func PoolDo(ctx context.Context, name string, maxWorkers int, job func(ctx conte
 			}(ctx, ch)
 
 		case <-ctx.Done():
-			msg := fmt.Sprintf("shutdown %s", name)
-			slog.Info(msg)
-			return ctx.Err()
+			slog.Info(fmt.Sprintf("shutdown %s", name))
+			return fmt.Errorf("%s: %w", name, ctx.Err())
 
 		default:
 			continue
