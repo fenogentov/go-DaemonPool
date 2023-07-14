@@ -1,4 +1,4 @@
-module godaemonpool
+module github.com/fenogentov/go-DaemonPool
 
 go 1.20
 
